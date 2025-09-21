@@ -315,13 +315,12 @@ $connection->close();
         <a href="index.php" class="back-link">← Назад к списку задач</a>
         
         <div class="create-header">
-            <h1> Добавить новую задачу</h1>
             <p>Создайте новую задачу и управляйте своими делами эффективно</p>
         </div>
         
         <?php if ($success_message): ?>
             <div class="alert alert-success">
-                ✅ <?php echo $success_message; ?>
+              <?php echo $success_message; ?>
                 <br><small>Вы будете перенаправлены через 2 секунды...</small>
             </div>
             <script>
@@ -383,7 +382,7 @@ $connection->close();
             <div class="btn-group">
                 <a href="index.php" class="btn btn-cancel">Отмена</a>
                 <button type="submit" class="btn btn-success">
-                    ➕ Создать задачу
+                     Создать задачу
                 </button>
             </div>
         </form>
@@ -414,11 +413,10 @@ $connection->close();
             updateCharacterCount(descriptionInput, descriptionCount, 1000);
         });
         
-        // Инициализация счетчиков
+        
         updateCharacterCount(titleInput, titleCount, 255);
         updateCharacterCount(descriptionInput, descriptionCount, 1000);
         
-        // Автоматическое перенаправление при успехе
         <?php if ($success_message): ?>
         setTimeout(function() {
             window.location.href = 'index.php';

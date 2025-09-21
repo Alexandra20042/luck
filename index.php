@@ -40,19 +40,19 @@ $connection->close();
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
-            color: #000000; /* Черный цвет шрифта для всего тела */
+            color: #000000; 
         }
         
         .container {
-            color: #000000; /* Черный цвет в контейнере */
+            color: #000000;
         }
         
         table {
-            color: #000000; /* Черный цвет в таблице */
+            color: #000000; 
         }
         
         td, th {
-            color: #000000; /* Черный цвет в ячейках */
+            color: #000000; 
         }
         
         .actions {
@@ -72,7 +72,7 @@ $connection->close();
             text-align: center;
             transition: all 0.3s ease;
             min-width: 100px;
-            color: #000000; /* Черный текст на кнопках */
+            color: #000000; 
         }
         
         .edit {
@@ -143,7 +143,6 @@ $connection->close();
             background: linear-gradient(135deg, #f39c12, #e67e22);
         }
         
-        /* Стили для приоритетов (цветной текст) */
         .priority-high {
             color: #e74c3c;
             font-weight: 700;
@@ -159,7 +158,6 @@ $connection->close();
             font-weight: 500;
         }
         
-        /* Стили для дат */
         .date-overdue {
             color: #e74c3c;
             font-weight: 700;
