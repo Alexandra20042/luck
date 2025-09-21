@@ -9,7 +9,6 @@ if ($connection->connect_error) {
 
 $connection->set_charset("utf8mb4");
 
-// Updated query to sort by id and due_date
 $query = "SELECT * FROM tasks ORDER BY 
           CASE priority 
             WHEN 'высокий' THEN 1 
@@ -17,7 +16,7 @@ $query = "SELECT * FROM tasks ORDER BY
             WHEN 'низкий' THEN 3 
           END, 
           id ASC, 
-          due_date ASC"; // Sort by id first, then by due_date
+          due_date ASC"; 
 $result = $connection->query($query);
 
 if (!$result) {
@@ -39,6 +38,148 @@ $connection->close();
     <title>Список дел</title>
     <link rel="icon" type="image/x-icon" href="/pic/icon.jpg">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            color: #000000; /* Черный цвет шрифта для всего тела */
+        }
+        
+        .container {
+            color: #000000; /* Черный цвет в контейнере */
+        }
+        
+        table {
+            color: #000000; /* Черный цвет в таблице */
+        }
+        
+        td, th {
+            color: #000000; /* Черный цвет в ячейках */
+        }
+        
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .action-btn {
+            display: block;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            text-align: center;
+            transition: all 0.3s ease;
+            min-width: 100px;
+            color: #000000; /* Черный текст на кнопках */
+        }
+        
+        .edit {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: 1px solid #4facfe;
+        }
+        
+        .edit:hover {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+        }
+        
+        .delete {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff9a3d 100%);
+            color: white;
+            border: 1px solid #ff6b6b;
+        }
+        
+        .delete:hover {
+            background: linear-gradient(135deg, #ff9a3d 0%, #ff6b6b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+        
+        .status-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .status-toggle-btn {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .status-toggle-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(106, 17, 203, 0.4);
+        }
+        
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: white;
+            min-width: 120px;
+            text-align: center;
+        }
+        
+        .status-completed {
+            background: linear-gradient(135deg, #27ae60, #219a52);
+        }
+        
+        .status-pending {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+        
+        /* Стили для приоритетов (цветной текст) */
+        .priority-high {
+            color: #e74c3c;
+            font-weight: 700;
+        }
+        
+        .priority-medium {
+            color: #f39c12;
+            font-weight: 600;
+        }
+        
+        .priority-low {
+            color: #27ae60;
+            font-weight: 500;
+        }
+        
+        /* Стили для дат */
+        .date-overdue {
+            color: #e74c3c;
+            font-weight: 700;
+        }
+        
+        .date-today {
+            color: #f39c12;
+            font-weight: 700;
+        }
+        
+        .date-future {
+            color: #27ae60;
+            font-weight: 600;
+        }
+        
+        .no-date {
+            color: #95a5a6;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -53,7 +194,7 @@ $connection->close();
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Номер</th>
                         <th>Название</th>
                         <th>Описание</th>
                         <th>Статус</th>
@@ -89,13 +230,15 @@ $connection->close();
                             ?></td>
                             <td>
                                 <div class="status-container">
+                                    <?php if ($task['statis'] == 'не выполнена'): ?>
                                     <form action="update_status.php" method="GET" style="display: inline;">
                                         <input type="hidden" name="id" value="<?php echo $task['id']; ?>">
                                         <button type="submit" class="status-toggle-btn" 
-                                                title="<?php echo ($task['statis'] == 'выполнена') ? 'Отметить как не выполненную' : 'Отметить как выполненную'; ?>">
-                                            <?php echo ($task['statis'] == 'выполнена') ? 'изменить' : 'изменить'; ?>
+                                                title="Отметить как выполненную">
+                                             Выполнить
                                         </button>
                                     </form>
+                                    <?php endif; ?>
                                     
                                     <?php 
                                     $status = htmlspecialchars($task['statis'] ?? '');
@@ -121,9 +264,9 @@ $connection->close();
                             </td>
                             <td><?php echo htmlspecialchars($task['created_at'] ?? ''); ?></td>
                             <td class="actions">
-                                <a href="edit.php?id=<?php echo $task['id']; ?>" class="edit" title="Редактировать">✏️</a>
-                                <a href="delete.php?id=<?php echo $task['id']; ?>" class="delete" 
-                                   onclick="return confirm('Вы уверены, что хотите удалить эту задачу?')" title="Удалить">🗑️</a>
+                                <a href="edit.php?id=<?php echo $task['id']; ?>" class="action-btn edit" title="Редактировать">Изменить</a>
+                                <a href="delete.php?id=<?php echo $task['id']; ?>" class="action-btn delete" 
+                                   onclick="return confirm('Вы уверены, что хотите удалить эту задачу?')" title="Удалить"> Удалить</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -132,7 +275,7 @@ $connection->close();
         <?php endif; ?>
         
         <br>
-<a href="add.php" class="add-btn" target="_blank">Добавить новую задачу</a>
+        <a href="add.php" class="add-btn" target="_blank">➕ Добавить новую задачу</a>
     </div>
 </body>
 </html>

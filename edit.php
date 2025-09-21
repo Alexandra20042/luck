@@ -5,7 +5,6 @@ if (isset($_GET['id'])) {
     $id = intval($_GET['id']);
     
     try {
-        // Создаем подключение
         $connection = new mysqli($host, $username, $password, $database);
         
         if ($connection->connect_error) {
